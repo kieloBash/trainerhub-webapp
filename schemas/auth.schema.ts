@@ -95,3 +95,7 @@ export const ForgotPasswordSchema = z.object({
     message: "Must be a valid email!",
   }),
 });
+
+export const OnboardingSchema = z.object({
+  //TODO
+});
