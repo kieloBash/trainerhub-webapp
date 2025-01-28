@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { LoginSchema } from "@/schemas/auth.schema";
 import { getUserByEmail } from "@/lib/user";
 import { generateVerificationToken } from "@/lib/tokens";
+import { APP_NAME } from "@/lib/utils";
 
 export const handleLoginAccount = async (values: z.infer<typeof LoginSchema>) => {
     const validatedFields = LoginSchema.safeParse(values);
@@ -35,7 +36,7 @@ export const handleLoginAccount = async (values: z.infer<typeof LoginSchema>) =>
         } else {
             const isMatching = await bcrypt.compare(password, existingUser.password);
 
-            if (isMatching) return { success: "Welcome!" };
+            if (isMatching) return { success: `Welcome ${existingUser.name} to ${APP_NAME}!` };
             else return { error: "Invalid Credentials!" };
         }
 

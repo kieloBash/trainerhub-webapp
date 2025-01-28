@@ -19,6 +19,7 @@ import {
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { INavLink } from "@/types/global"
+import { cn } from "@/lib/utils"
 
 export function NavLinks({
     items,

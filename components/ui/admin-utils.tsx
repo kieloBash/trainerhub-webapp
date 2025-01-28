@@ -27,11 +27,20 @@ import {
 
 import { useState } from "react"
 import { signOut } from "next-auth/react"
+import { toast } from "@/hooks/use-toast"
+import { createAdminAccount } from "@/lib/user"
 
 type SelectedType = "" | "";
 
 export default function UiAdminUtils() {
     const [selected, setSelected] = useState<SelectedType>("");
+
+    async function handleCreateAdmin() {
+        toast({ description: "Creating admin account!" })
+        await createAdminAccount();
+        toast({ description: "Success!" })
+    }
+
     return (
         <>
             <div className="fixed lg:bottom-10 bottom-36 mb-2 right-2">
@@ -51,7 +60,7 @@ export default function UiAdminUtils() {
                                     <span>Account</span>
                                 </DropdownMenuSubTrigger>
                                 <DropdownMenuSubContent>
-                                    <DropdownMenuItem onClick={() => { }}>
+                                    <DropdownMenuItem onClick={handleCreateAdmin}>
                                         <div className="grid gap-1">
                                             <div className="flex gap-2">
                                                 <UserPlus />

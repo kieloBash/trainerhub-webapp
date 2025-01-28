@@ -13,6 +13,12 @@ enum UserRole {
   TRAINER
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
   type              String
@@ -41,6 +47,8 @@ model User {
   password      String?
   image         String?
   contactNumber String?
+  gender        Gender?
+  location      String?
   role          UserRole? @default(USER)
 
   createdAt DateTime @default(now())
@@ -48,6 +56,10 @@ model User {
 
   isOnboarded Boolean   @default(false)
   accounts    Account[]
+
+  //added
+  sport   Sport?  @relation(fields: [sportId], references: [id])
+  sportId String? @db.ObjectId
 
   @@map("users")
 }
@@ -82,3 +94,11 @@ model PasswordResetToken {
 //   \ /
 //    V
 
+model Sport {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  users User[]
+
+  @@map("sports")
+}

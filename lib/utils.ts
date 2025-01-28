@@ -12,8 +12,8 @@ export const FETCH_INTERVAL = 60000 * 10;
 
 export const FORMAT = "yyyy-MM-dd";
 
-export const APP_NAME = "TrainerHub";
-export const APP_EMAIL = "trainerhub@gmail.com";
+export const APP_NAME = "TrainHub";
+export const APP_EMAIL = "trainhub@gmail.com";
 
 export function formatTime(time: string) {
   const TIME_FORMAT = "HH:mm";
@@ -36,45 +36,6 @@ export const generateRandomSKU = () => {
   const timestampPart = Date.now().toString().slice(-4); // Last 4 digits of the current timestamp
   return `SKU-${randomPart}-${timestampPart}`; // Combine for a unique SKU
 };
-
-export const generateRandomINV = () => {
-  const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase(); // Random alphanumeric string
-  const timestampPart = Date.now().toString().slice(-4); // Last 4 digits of the current timestamp
-  return `INV-${randomPart}-${timestampPart}`; // Combine for a unique SKU
-};
-
-export async function handlePostAxios({
-  values,
-  route,
-  handleSuccess,
-}: {
-  values: any;
-  route: string;
-  handleSuccess: () => void;
-}) {
-  toast({
-    title: "Please wait!",
-    description:
-      "Please wait while we process your request! This may take long...",
-  });
-  await axios
-    .post(route, values)
-    .then((res) => {
-      toast({
-        title: "Success!",
-        description: res.data,
-      });
-      handleSuccess();
-    })
-    .catch((error) => {
-      console.log(error);
-      toast({
-        title: "An error occured!",
-        variant: "destructive",
-        description: error.request.response,
-      });
-    });
-}
 
 interface IPostAxiosProps {
   values: any;

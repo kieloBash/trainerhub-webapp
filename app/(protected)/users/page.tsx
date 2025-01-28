@@ -2,12 +2,12 @@ import { currentRole } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
-const DashboardPage = async () => {
+const UsersPage = async () => {
 
     const role = await currentRole()
-    if (role === "ADMIN") redirect("/dashboard/admin");
+    if (role === "ADMIN") redirect("/users/admin");
 
     return null
 }
 
-export default DashboardPage
+export default UsersPage
