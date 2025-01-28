@@ -49,6 +49,7 @@ model User {
   contactNumber String?
   gender        Gender?
   location      String?
+  dateOfBirth   DateTime?
   role          UserRole? @default(USER)
 
   createdAt DateTime @default(now())

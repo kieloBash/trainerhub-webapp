@@ -64,8 +64,7 @@ export async function handleAxios({ values, url }: IPostAxiosProps) {
       return res.data;
     }
   } catch (e: any) {
-    const errorMessage =
-      e.response?.data?.message || e.message || "An error occurred";
+    const errorMessage = e.response?.data || e.message || "An error occurred";
     toast({
       title: "Error!",
       description: errorMessage,

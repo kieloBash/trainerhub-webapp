@@ -106,7 +106,7 @@ const AdminHeaderLayout = ({ children, list, title, description }: IProps) => {
                     </DropdownMenu>
                 </div>
             </div>
-            <div className="w-full flex-1">{children}</div>
+            <div className="w-full flex-1 p-4">{children}</div>
         </div>
     )
 }

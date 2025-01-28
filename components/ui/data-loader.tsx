@@ -50,11 +50,11 @@ const UiDefault = ({ length = 0, isError = false, isLoading, children, message =
     )
 }
 
-const UiTable = ({ length = 0, isError = false, isLoading, children, columns = 0 }: IProps) => {
+const UiTable = ({ length = 0, isError = false, isLoading, children, columns = 0, message = DEFAULT_MESSAGE }: IProps) => {
     if (isError) return (
         <TableRow>
             <TableCell colSpan={columns}>
-                <p className="text-center text-muted-foreground p-4">An error occured!</p>
+                <p className="text-center text-muted-foreground p-4">{message.error ?? DEFAULT_MESSAGE.error}</p>
             </TableCell>
         </TableRow>
     )
@@ -72,7 +72,7 @@ const UiTable = ({ length = 0, isError = false, isLoading, children, columns = 0
     if (length === 0) return (
         <TableRow>
             <TableCell colSpan={columns}>
-                <p className="text-center text-muted-foreground p-4">No items found!</p>
+                <p className="text-center text-muted-foreground p-4">{message.no_items ?? DEFAULT_MESSAGE.no_items}</p>
             </TableCell>
         </TableRow>
     )
