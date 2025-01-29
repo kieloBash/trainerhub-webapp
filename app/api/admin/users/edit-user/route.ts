@@ -2,12 +2,12 @@ import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { getUserByEmail } from "@/lib/user";
-import { AdminCreateUserSchema } from "@/schemas/user.schema";
 
-const ROUTE_NAME = "Create User";
+import { AdminEditUserSchema } from "@/schemas/user.schema";
+
+const ROUTE_NAME = "Updated User";
 const ROUTE_STATUS = 201;
-const SUCCESS_MESSAGE = "Successfully Created User!";
+const SUCCESS_MESSAGE = "Successfully Updated User!";
 
 export async function POST(request: Request) {
   try {
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const validatedFields = AdminCreateUserSchema.safeParse(body);
+    const validatedFields = AdminEditUserSchema.safeParse(body);
 
     if (!validatedFields.success) {
       return new NextResponse(ROUTE_NAME + ": Invalid fields", { status: 400 });
@@ -37,15 +37,8 @@ export async function POST(request: Request) {
       contactNumber,
     } = validatedFields.data;
 
-    const hashedPassword = await bcrypt.hash(password as any, 10);
-    const existingUser = await getUserByEmail(email);
-    if (existingUser) {
-      return new NextResponse(ROUTE_NAME + ": Email already exists!", {
-        status: 400,
-      });
-    }
-
-    const newUser = await db.user.create({
+    await db.user.update({
+      where: { email },
       data: {
         role,
         email,
@@ -54,7 +47,7 @@ export async function POST(request: Request) {
         gender,
         contactNumber,
         dateOfBirth: dob ? new Date(dob) : null,
-        password: hashedPassword,
+        // password: hashedPassword,
         lName,
         fName,
         //add sport

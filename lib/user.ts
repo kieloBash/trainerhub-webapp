@@ -25,6 +25,48 @@ export const getUserById = async (id: string) => {
   }
 };
 
+export const getUserByIdAuth = async ({
+  id,
+  currentId,
+}: {
+  id: string;
+  currentId?: string;
+}) => {
+  try {
+    if (!currentId) return null;
+
+    const currentUser = await db.user.findFirst({
+      where: { id: currentId },
+      select: { role: true },
+    });
+
+    if (!currentUser || !currentUser.role || currentUser.role !== "ADMIN")
+      return null;
+
+    return await db.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        sport: true,
+        location: true,
+        dateOfBirth: true,
+        contactNumber: true,
+        gender: true,
+        fName: true,
+        lName: true,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return null;
+  } finally {
+    db.$disconnect();
+  }
+};
+
 export const createAdminAccount = async () => {
   try {
     const existing = await getUserByEmail("admin@gmail.com");

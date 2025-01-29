@@ -5,9 +5,9 @@ import bcrypt from "bcryptjs";
 import { getUserByEmail } from "@/lib/user";
 import { AdminCreateUserSchema } from "@/schemas/user.schema";
 
-const ROUTE_NAME = "Create User";
+const ROUTE_NAME = "Delete User";
 const ROUTE_STATUS = 201;
-const SUCCESS_MESSAGE = "Successfully Created User!";
+const SUCCESS_MESSAGE = "Successfully Deleted User!";
 
 export async function POST(request: Request) {
   try {
@@ -18,51 +18,13 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const validatedFields = AdminCreateUserSchema.safeParse(body);
+    const { id } = body;
 
-    if (!validatedFields.success) {
+    if (!id) {
       return new NextResponse(ROUTE_NAME + ": Invalid fields", { status: 400 });
     }
 
-    const {
-      password,
-      email,
-      dob,
-      fName,
-      lName,
-      role,
-      sport,
-      location,
-      gender,
-      contactNumber,
-    } = validatedFields.data;
-
-    const hashedPassword = await bcrypt.hash(password as any, 10);
-    const existingUser = await getUserByEmail(email);
-    if (existingUser) {
-      return new NextResponse(ROUTE_NAME + ": Email already exists!", {
-        status: 400,
-      });
-    }
-
-    const newUser = await db.user.create({
-      data: {
-        role,
-        email,
-        name: `${fName} ${lName}`,
-        location,
-        gender,
-        contactNumber,
-        dateOfBirth: dob ? new Date(dob) : null,
-        password: hashedPassword,
-        lName,
-        fName,
-        //add sport
-
-        isOnboarded: true,
-        emailVerified: new Date(),
-      },
-    });
+    await db.user.delete({ where: { id } });
 
     return new NextResponse(SUCCESS_MESSAGE, { status: ROUTE_STATUS });
   } catch (error: any) {

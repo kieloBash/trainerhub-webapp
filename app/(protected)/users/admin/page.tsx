@@ -30,7 +30,6 @@ const AdminUsersPage = () => {
     const endDate = endDateParam ? new Date(endDateParam) : new Date();
 
     const data = useAdminUsers({ role, sport, startDate, endDate });
-    console.log(data);
     return (
         <article className="size-full">
             <Filters />

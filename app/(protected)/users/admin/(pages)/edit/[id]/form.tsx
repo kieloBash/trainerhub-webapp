@@ -15,15 +15,16 @@ import FormSelect from '@/components/forms/form-select';
 import { Gender, UserRole } from '@prisma/client';
 import FormSubmit from '@/components/forms/submit-button';
 import { toast } from '@/hooks/use-toast';
-import { AdminCreateUserSchema } from '@/schemas/user.schema';
+import { AdminEditUserSchema } from '@/schemas/user.schema';
 import { ADMIN_ROUTES } from '@/routes/admin.routes';
 import { Button } from '@/components/ui/button';
+import { UserType } from '@/types/lib.type';
 
-const URL = ADMIN_ROUTES.USERS.CREATE_USER.URL
+const URL = ADMIN_ROUTES.USERS.EDIT_USER.URL
 const QUERY_KEY = ADMIN_ROUTES.USERS.FETCH_ALL.KEY;
-const Schema = AdminCreateUserSchema;
+const Schema = AdminEditUserSchema;
 
-const AdminCreateUserPage = () => {
+const UserForm = ({ data }: { data: UserType }) => {
     const [isLoading, setIsLoading] = useState(false)
 
     const queryClient = useQueryClient()
@@ -32,12 +33,15 @@ const AdminCreateUserPage = () => {
     const form = useForm<z.infer<typeof Schema>>({
         resolver: zodResolver(Schema),
         defaultValues: {
-            fName: undefined,
-            lName: undefined,
-            role: "USER",
-            sport: undefined,
-            location: undefined,
-            dob: new Date().toISOString().split('T')[0],
+            contactNumber: data?.contactNumber || "",
+            email: data?.email || "",
+            gender: data?.gender || undefined,
+            fName: data.fName || undefined,
+            lName: data?.lName || undefined,
+            role: data.role as any || "USER",
+            sport: data?.sportId || undefined,
+            location: data?.location || "",
+            dob: data?.dateOfBirth?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
         },
     });
 
@@ -114,7 +118,7 @@ const AdminCreateUserPage = () => {
                         />
                         <div className="flex gap-2 justify-start items-center">
                             <FormSubmit disabled={isLoading}>
-                                <span>Create</span>
+                                <span>Save Changes</span>
                             </FormSubmit>
                             <Button disabled={isLoading} type='button' variant={"outline"} onClick={() => router.back()}>
                                 Back
@@ -163,4 +167,4 @@ const AdminCreateUserPage = () => {
     )
 }
 
-export default AdminCreateUserPage
+export default UserForm
