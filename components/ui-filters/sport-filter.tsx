@@ -11,6 +11,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { DumbbellIcon } from 'lucide-react';
+import useSports, { useSportsOptions } from '@/hooks/trainhub/use-sports';
 
 
 interface IProps {
@@ -22,6 +23,8 @@ const UiSportFilter = ({ className, searchName = "sport" }: IProps) => {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+
+    const sports = useSportsOptions();
 
     const sport = searchParams.get(searchName) || "ALL";
 
@@ -45,6 +48,13 @@ const UiSportFilter = ({ className, searchName = "sport" }: IProps) => {
                 <SelectGroup>
                     <SelectLabel>Sport</SelectLabel>
                     <SelectItem value="ALL">All</SelectItem>
+                    {
+                        sports?.map((d) => {
+                            return (
+                                <SelectItem key={d.id} value={d.id}>{d.label}</SelectItem>
+                            )
+                        })
+                    }
                 </SelectGroup>
             </SelectContent>
         </Select>

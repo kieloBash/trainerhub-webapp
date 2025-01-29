@@ -57,6 +57,7 @@ export async function POST(request: Request) {
         password: hashedPassword,
         lName,
         fName,
+        sportId: sport,
         //add sport
 
         isOnboarded: true,

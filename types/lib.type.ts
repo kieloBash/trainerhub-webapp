@@ -1,3 +1,6 @@
-import { User } from "@prisma/client";
+import { Sport, User } from "@prisma/client";
 
-export type UserType = User & {};
+export type UserType = User & {
+  sport?: SportType;
+};
+export type SportType = Sport & {};

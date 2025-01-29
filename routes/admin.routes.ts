@@ -16,4 +16,13 @@ export const ADMIN_ROUTES = {
       KEY: "ADMIN:USERS:ALL",
     },
   },
+  SPORTS: {
+    CREATE_SPORT: {
+      URL: MAIN_API + "/sports/create-sport",
+    },
+    FETCH_ALL: {
+      URL: "/api/trainhub/sports/list",
+      KEY: "ADMIN:SPORTS:ALL",
+    },
+  },
 };

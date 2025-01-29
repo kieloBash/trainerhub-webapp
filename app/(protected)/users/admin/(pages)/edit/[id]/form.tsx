@@ -19,6 +19,7 @@ import { AdminEditUserSchema } from '@/schemas/user.schema';
 import { ADMIN_ROUTES } from '@/routes/admin.routes';
 import { Button } from '@/components/ui/button';
 import { UserType } from '@/types/lib.type';
+import { useSportsOptions } from '@/hooks/trainhub/use-sports';
 
 const URL = ADMIN_ROUTES.USERS.EDIT_USER.URL
 const QUERY_KEY = ADMIN_ROUTES.USERS.FETCH_ALL.KEY;
@@ -26,6 +27,7 @@ const Schema = AdminEditUserSchema;
 
 const UserForm = ({ data }: { data: UserType }) => {
     const [isLoading, setIsLoading] = useState(false)
+    const sports = useSportsOptions();
 
     const queryClient = useQueryClient()
     const router = useRouter()
@@ -156,7 +158,7 @@ const UserForm = ({ data }: { data: UserType }) => {
                             control={form.control}
                             name="sport"
                             label="Sport"
-                            array={[{ id: "Basketball", label: "Basketball" }]}
+                            array={sports}
                             disabled={isLoading}
                             value={form.watch("sport")}
                         />

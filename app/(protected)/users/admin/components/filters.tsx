@@ -8,6 +8,7 @@ import React from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link'
 import { PlusIcon } from 'lucide-react'
+import CreateSportModal from '@/components/ui-project/modal-create-sport'
 
 const Filters = () => {
     const router = useRouter();
@@ -33,7 +34,8 @@ const Filters = () => {
                     Reset Filters
                 </Button>
             </div>
-            <div className="">
+            <div className="flex justify-end items-center gap-2">
+                <CreateSportModal />
                 <Link href={"/users/admin/create"}>
                     <Button type='button' size={"sm"}>
                         <PlusIcon />

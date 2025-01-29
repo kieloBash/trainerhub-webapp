@@ -1,13 +1,11 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+import { AdminCreateSportSchema } from "@/schemas/sport.schema";
 
-import { AdminEditUserSchema } from "@/schemas/user.schema";
-
-const ROUTE_NAME = "Updated User";
+const ROUTE_NAME = "Create Sport";
 const ROUTE_STATUS = 201;
-const SUCCESS_MESSAGE = "Successfully Updated User!";
+const SUCCESS_MESSAGE = "Successfully Created Sport!";
 
 export async function POST(request: Request) {
   try {
@@ -18,45 +16,22 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const validatedFields = AdminEditUserSchema.safeParse(body);
+    const validatedFields = AdminCreateSportSchema.safeParse(body);
 
     if (!validatedFields.success) {
       return new NextResponse(ROUTE_NAME + ": Invalid fields", { status: 400 });
     }
 
-    const {
-      password,
-      email,
-      dob,
-      fName,
-      lName,
-      role,
-      sport,
-      location,
-      gender,
-      contactNumber,
-    } = validatedFields.data;
+    const { name } = validatedFields.data;
 
-    await db.user.update({
-      where: { email },
-      data: {
-        role,
-        email,
-        name: `${fName} ${lName}`,
-        location,
-        gender,
-        contactNumber,
-        dateOfBirth: dob ? new Date(dob) : null,
-        // password: hashedPassword,
-        lName,
-        fName,
-        sportId: sport,
-        //add sport
+    const existing = await db.sport.findFirst({ where: { name } });
+    if (existing) {
+      return new NextResponse(ROUTE_NAME + ": Sport already exists!", {
+        status: 400,
+      });
+    }
 
-        isOnboarded: true,
-        emailVerified: new Date(),
-      },
-    });
+    const newSport = await db.sport.create({ data: { name } });
 
     return new NextResponse(SUCCESS_MESSAGE, { status: ROUTE_STATUS });
   } catch (error: any) {

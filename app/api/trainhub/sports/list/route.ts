@@ -1,17 +1,16 @@
 import { ApiResponse } from "@/hooks/admin/use-users";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { endOfDay, startOfDay } from "date-fns";
 import { NextResponse } from "next/server";
 
-const ROUTE_NAME = "Fetch Users List";
+const ROUTE_NAME = "Fetch Sports List";
 const ROUTE_STATUS = 200;
 
 export async function GET(request: Request) {
   try {
     const user = await currentUser();
 
-    if (!user || !user.id || user.role !== "ADMIN") {
+    if (!user || !user.id) {
       return new NextResponse(ROUTE_NAME + ": Unauthorized: No Access", {
         status: 401,
       });
@@ -21,25 +20,9 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "5", 10);
     const searchTerm = searchParams.get("searchTerm") || "";
-    const roleFilter = searchParams.get("role") || "ALL";
-    const sportFilter = searchParams.get("sport") || "ALL";
-    const startDateParam = searchParams.get("startDate");
-    const endDateParam = searchParams.get("endDate");
-    const startDate = startDateParam ? new Date(startDateParam) : undefined;
-    const endDate = endDateParam ? new Date(endDateParam) : undefined;
+    const filter = searchParams.get("filter") || "ALL";
 
-    const whereClause: any = {
-      id: { notIn: [user.id] },
-      ...(roleFilter !== "ALL" && { role: roleFilter as any }),
-      ...(sportFilter !== "ALL" && { sportId: sportFilter as any }),
-      ...(startDate &&
-        endDate && {
-          createdAt: {
-            gte: startOfDay(startDate),
-            lte: endOfDay(endDate),
-          },
-        }),
-    };
+    const whereClause: any = {};
 
     const response: ApiResponse = {
       payload: [],
@@ -49,21 +32,19 @@ export async function GET(request: Request) {
     };
 
     const [data, totalData] = await Promise.all([
-      await db.user.findMany({
-        skip: (page - 1) * limit,
-        take: limit,
+      await db.sport.findMany({
+        ...(filter !== "ALL" && {
+          skip: (page - 1) * limit,
+          take: limit,
+        }), //have limit if not all
         where: whereClause,
         select: {
           id: true,
           name: true,
-          email: true,
-          role: true,
-          createdAt: true,
-          sport: true,
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { name: "asc" },
       }),
-      await db.user.count({ where: whereClause }),
+      await db.sport.count({ where: whereClause }),
     ]);
 
     const formatData = data.map((d) => {

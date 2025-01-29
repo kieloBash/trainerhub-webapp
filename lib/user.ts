@@ -50,6 +50,7 @@ export const getUserByIdAuth = async ({
         name: true,
         email: true,
         role: true,
+        sportId: true,
         sport: true,
         location: true,
         dateOfBirth: true,

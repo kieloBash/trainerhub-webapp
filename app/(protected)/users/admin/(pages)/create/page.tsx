@@ -18,13 +18,15 @@ import { toast } from '@/hooks/use-toast';
 import { AdminCreateUserSchema } from '@/schemas/user.schema';
 import { ADMIN_ROUTES } from '@/routes/admin.routes';
 import { Button } from '@/components/ui/button';
+import { useSportsOptions } from '@/hooks/trainhub/use-sports';
 
 const URL = ADMIN_ROUTES.USERS.CREATE_USER.URL
 const QUERY_KEY = ADMIN_ROUTES.USERS.FETCH_ALL.KEY;
 const Schema = AdminCreateUserSchema;
 
 const AdminCreateUserPage = () => {
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const sports = useSportsOptions();
 
     const queryClient = useQueryClient()
     const router = useRouter()
@@ -152,7 +154,7 @@ const AdminCreateUserPage = () => {
                             control={form.control}
                             name="sport"
                             label="Sport"
-                            array={[{ id: "Basketball", label: "Basketball" }]}
+                            array={sports}
                             disabled={isLoading}
                             value={form.watch("sport")}
                         />
