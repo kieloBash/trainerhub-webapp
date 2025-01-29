@@ -4,6 +4,7 @@ import { ILayoutProps } from '@/types/global'
 import { redirect } from 'next/navigation';
 import { SidebarProvider } from '../ui/sidebar';
 import AdminLayout from './AdminLayout';
+import UserLayout from './UserLayout';
 
 
 
@@ -25,10 +26,19 @@ const AuthenticatedLayout = async ({ children }: ILayoutProps) => {
             </SidebarProvider>
         )
     }
+    else if (user.role === "USER") {
+        return (
+            <SidebarProvider>
+                <UserLayout>
+                    {children}
+                </UserLayout>
+            </SidebarProvider>
+        )
+    }
 
     return (
         <section className="w-screen min-h-screen flex justify-center items-center">
-            <h1 className="text-lg font-bold">Authentication Error: No role</h1>
+            <h1 className="text-lg font-semibold">Authentication Error: No role</h1>
         </section>
     )
 }
