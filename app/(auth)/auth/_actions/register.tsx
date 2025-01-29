@@ -3,34 +3,54 @@
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { RegisterSchema } from "@/schemas/auth.schema";
 import { getUserByEmail } from "@/lib/user";
 import { generateVerificationToken } from "@/lib/tokens";
+import { RegisterUserSchema } from "@/schemas/user.schema";
 
-export const handleRegisterAccount = async (values: z.infer<typeof RegisterSchema>) => {
-    const validatedFields = RegisterSchema.safeParse(values);
+export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserSchema>) => {
+    const validatedFields = RegisterUserSchema.safeParse(values);
 
     if (!validatedFields.success) {
         return { error: "Invalid fields!" };
     }
 
     try {
-        const { email, password, fullName, role } = validatedFields.data;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const {
+            email,
+            password,
+            dob,
+            fName,
+            lName,
+            role,
+            sport,
+            location,
+            gender,
+            contactNumber,
+        } = validatedFields.data;
 
         const existingUser = await getUserByEmail(email);
 
         if (existingUser) {
             return { error: "Email already in use!" };
         }
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         await db.user.create({
             data: {
-                name: fullName,
-                email,
-                password: hashedPassword,
                 role,
-                isOnboarded: false,
+                email,
+                name: `${fName} ${lName}`,
+                location,
+                gender,
+                contactNumber,
+                dateOfBirth: dob ? new Date(dob) : null,
+                password: hashedPassword,
+                lName,
+                fName,
+                sportId: sport,
+                //add sport
+
+                isOnboarded: true,
             },
         });
 

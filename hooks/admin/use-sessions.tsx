@@ -1,19 +1,22 @@
 "use client";
 
-import { FETCH_INTERVAL } from "@/lib/utils";
+import { FETCH_INTERVAL, FORMAT } from "@/lib/utils";
 import { ADMIN_ROUTES } from "@/routes/admin.routes";
-import { SportType } from "@/types/lib.type";
+import { SessionType } from "@/types/lib.type";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { formatDate, subDays } from "date-fns";
 
-const ROUTE = ADMIN_ROUTES.SPORTS.FETCH_ALL.URL;
-const KEY = ADMIN_ROUTES.SPORTS.FETCH_ALL.KEY;
+const ROUTE = ADMIN_ROUTES.SESSIONS.FETCH_ALL.URL;
+const KEY = ADMIN_ROUTES.SESSIONS.FETCH_ALL.KEY;
 const INTERVAL = FETCH_INTERVAL
 
 const default_limit = 10;
 const default_filter = "ALL";
+const default_startDate = subDays(new Date(), 7);
+const default_endDate = new Date();
 
 export type ApiResponse = {
-    payload: SportType[],
+    payload: SessionType[],
     totalData: number,
     totalPages: number,
     currentPage: number,
@@ -24,16 +27,25 @@ export type FetchParams = {
     limit?: number;
     filter?: string;
     searchTerm?: string;
+
+    role?: string,
+    sport?: string,
+    startDate?: Date,
+    endDate?: Date,
 };
 
 const fetchData = async ({
     page = 1,
     limit = default_limit,
     filter = default_filter,
+    role = default_filter,
+    sport = default_filter,
+    startDate = default_startDate,
+    endDate = default_endDate,
     searchTerm = "",
 }: FetchParams): Promise<ApiResponse> => {
     const response = await fetch(
-        `${ROUTE}?page=${page}&limit=${limit}&filter=${filter}&searchTerm=${searchTerm}`
+        `${ROUTE}?page=${page}&limit=${limit}&filter=${filter}&searchTerm=${searchTerm}&role=${role}&sport=${sport}&startDate=${startDate}&endDate=${endDate}`
     );
     if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -46,24 +58,32 @@ interface IProps {
     limit?: number,
     filter?: string,
     searchTerm?: string,
+    role?: string,
+    sport?: string,
+    startDate?: Date,
+    endDate?: Date,
 
     select?: any
 }
 
-const useSports = (
+const useAdminSessions = (
     {
         page = 1,
         limit = default_limit,
         filter = default_filter,
+        role = default_filter,
+        sport = default_filter,
+        startDate = default_startDate,
+        endDate = default_endDate,
         searchTerm = "",
         select,
     }: IProps
 ) => {
 
     const { data, error, isLoading, isFetching, isError } = useQuery<ApiResponse>({
-        queryKey: [KEY, page, limit, filter, searchTerm],
+        queryKey: [KEY, page, limit, filter, searchTerm, role, sport, formatDate(startDate, FORMAT), formatDate(endDate, FORMAT)],
         queryFn: () =>
-            fetchData({ page, limit, filter, searchTerm }),
+            fetchData({ page, limit, filter, searchTerm, role, sport, startDate, endDate }),
         staleTime: INTERVAL,
         refetchOnWindowFocus: false,
         placeholderData: keepPreviousData,
@@ -79,11 +99,4 @@ const useSports = (
     };
 };
 
-export default useSports;
-
-export const useSportsOptions = () => {
-    const data = useSports({});
-    console.log(data);
-    if (data.isLoading || data.isFetching || data.isError || !data.payload) return [];
-    return data.payload.map((d) => ({ id: d.id, label: d.name }));
-}
+export default useAdminSessions;

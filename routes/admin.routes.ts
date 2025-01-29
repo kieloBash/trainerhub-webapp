@@ -1,6 +1,12 @@
 const MAIN_API = "/api/admin";
 
 export const ADMIN_ROUTES = {
+  SESSIONS: {
+    FETCH_ALL: {
+      URL: MAIN_API + "/sessions/fetch-all",
+      KEY: "ADMIN:SESSIONS:ALL",
+    },
+  },
   USERS: {
     CREATE_USER: {
       URL: MAIN_API + "/users/create-user",

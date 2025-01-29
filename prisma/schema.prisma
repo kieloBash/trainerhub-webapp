@@ -61,8 +61,10 @@ model User {
   accounts    Account[]
 
   //added
-  sport   Sport?  @relation(fields: [sportId], references: [id])
-  sportId String? @db.ObjectId
+  sport               Sport?        @relation(fields: [sportId], references: [id])
+  sportId             String?       @db.ObjectId
+  trainerAppointments Appointment[] @relation("TrainerAppointments")
+  traineeAppointments Appointment[] @relation("TraineeAppointments")
 
   @@map("users")
 }
@@ -104,4 +106,29 @@ model Sport {
   users User[]
 
   @@map("sports")
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Appointment {
+  id     String            @id @default(auto()) @map("_id") @db.ObjectId
+  date   DateTime
+  status AppointmentStatus @default(PENDING)
+  notes  String?
+
+  traineeId String @db.ObjectId
+  trainee   User   @relation(fields: [traineeId], references: [id], name: "TraineeAppointments")
+
+  trainerId String @db.ObjectId
+  trainer   User   @relation(fields: [trainerId], references: [id], name: "TrainerAppointments")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("appointments")
 }
