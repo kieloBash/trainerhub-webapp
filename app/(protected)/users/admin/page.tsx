@@ -8,7 +8,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import Row from './components/row'
 import Filters from './components/filters'
 import useAdminUsers from '@/hooks/admin/use-users'
@@ -16,12 +16,14 @@ import useAdminUsers from '@/hooks/admin/use-users'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { subDays } from 'date-fns'
 import UiDataLoader from '@/components/ui/data-loader'
+import UiPaginatedButtons from '@/components/ui/paginated-btns'
 
 const AdminUsersPage = () => {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    const page = parseInt(searchParams.get("page") || "1", 10);
     const role = searchParams.get("role") || "ALL";
     const sport = searchParams.get("sport") || "ALL";
     const startDateParam = searchParams.get("startDate");
@@ -29,7 +31,7 @@ const AdminUsersPage = () => {
     const startDate = startDateParam ? new Date(startDateParam) : subDays(new Date(), 7);
     const endDate = endDateParam ? new Date(endDateParam) : new Date();
 
-    const data = useAdminUsers({ role, sport, startDate, endDate });
+    const data = useAdminUsers({ role, sport, startDate, endDate, page });
     return (
         <article className="size-full">
             <Filters />
@@ -64,6 +66,9 @@ const AdminUsersPage = () => {
                         </TableBody>
                     </Table>
                 </CardContent>
+                <CardFooter>
+                    <UiPaginatedButtons hasNext={page < (data?.totalPages ?? 0)} hasPrev={page > 1} />
+                </CardFooter>
             </Card>
         </article>
     )
