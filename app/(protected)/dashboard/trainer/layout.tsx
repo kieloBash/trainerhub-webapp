@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 const Layout = ({ children }: ILayoutProps) => {
     return (
-        <RoleGateLayout roles={[UserRole.USER]}>
+        <RoleGateLayout roles={[UserRole.TRAINER]}>
             <HeaderLayout list={LIST} title={TITLE} description={DESCRIPTION}>
                 {children}
             </HeaderLayout>
