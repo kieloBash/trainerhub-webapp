@@ -35,6 +35,13 @@ export async function POST(request: Request) {
       location,
       gender,
       contactNumber,
+      image,
+      
+      bio,
+      highlights,
+      careerPath,
+      focus,
+      commission,
     } = validatedFields.data;
 
     const hashedPassword = await bcrypt.hash(password as any, 10);
@@ -47,23 +54,52 @@ export async function POST(request: Request) {
 
     const newUser = await db.user.create({
       data: {
-        role,
-        email,
         name: `${fName} ${lName}`,
-        location,
-        gender,
-        contactNumber,
-        dateOfBirth: dob ? new Date(dob) : null,
+        email,
+        emailVerified: new Date(),
         password: hashedPassword,
-        lName,
-        fName,
-        sportId: sport,
-        //add sport
+        image,
+        role,
 
         isOnboarded: true,
-        emailVerified: new Date(),
       },
     });
+
+    if (role === "TRAINER") {
+      const newTrainer = await db.trainerProfile.create({
+        data: {
+          fName,
+          lName,
+          contactNumber,
+          gender,
+          location,
+          dob: new Date(dob),
+
+          bio,
+          careerPath: careerPath ?? "",
+          highlights: highlights ?? "",
+          focus: focus ?? "",
+          commission: commission ?? 0,
+          sportId: sport,
+          userId: newUser.id,
+        },
+      });
+    } else if (role === "USER") {
+      const newTrainee = await db.userProfile.create({
+        data: {
+          fName,
+          lName,
+          contactNumber,
+          gender,
+          location,
+          dob: new Date(dob),
+
+          bio,
+          sportId: sport,
+          userId: newUser.id,
+        },
+      });
+    }
 
     return new NextResponse(SUCCESS_MESSAGE, { status: ROUTE_STATUS });
   } catch (error: any) {

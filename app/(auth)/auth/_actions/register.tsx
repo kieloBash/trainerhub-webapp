@@ -18,10 +18,12 @@ export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserS
         const {
             email,
             password,
-            dob,
             fName,
             lName,
+            image,
             role,
+
+            dob,
             sport,
             location,
             gender,
@@ -35,24 +37,34 @@ export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserS
         }
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await db.user.create({
+        const newUser = await db.user.create({
             data: {
-                role,
-                email,
                 name: `${fName} ${lName}`,
-                location,
-                gender,
-                contactNumber,
-                dateOfBirth: dob ? new Date(dob) : null,
+                email,
                 password: hashedPassword,
-                lName,
-                fName,
-                sportId: sport,
-                //add sport
+                image,
+                role,
 
-                isOnboarded: true,
+                isOnboarded: false,
             },
         });
+
+        if (role === "USER") {
+            const newTrainee = await db.userProfile.create({
+                data: {
+                    fName,
+                    lName,
+                    contactNumber,
+                    gender,
+                    location,
+                    dob: new Date(dob),
+
+                    bio: `Welcome to our platform! Please update your bio.`,
+                    sportId: sport,
+                    userId: newUser.id,
+                },
+            });
+        }
 
         const verificationToken = await generateVerificationToken(email);
 

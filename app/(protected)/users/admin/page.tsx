@@ -59,7 +59,7 @@ const AdminUsersPage = () => {
                             >
                                 {
                                     data.payload?.map((d) => {
-                                        return <Row key={d.id} data={d} />
+                                        return <Row key={d.id} data={d as any} />
                                     })
                                 }
                             </UiDataLoader>

@@ -31,7 +31,20 @@ export async function GET(request: Request) {
     const whereClause: any = {
       id: { notIn: [user.id] },
       ...(roleFilter !== "ALL" && { role: roleFilter as any }),
-      ...(sportFilter !== "ALL" && { sportId: sportFilter as any }),
+      ...(sportFilter !== "ALL" && {
+        OR: [
+          {
+            trainee: {
+              sportId: sportFilter,
+            },
+          },
+          {
+            trainer: {
+              sportId: sportFilter,
+            },
+          },
+        ],
+      }),
       ...(startDate &&
         endDate && {
           createdAt: {
@@ -59,7 +72,8 @@ export async function GET(request: Request) {
           email: true,
           role: true,
           createdAt: true,
-          sport: true,
+          trainee: { include: { sport: true } },
+          trainer: { include: { sport: true } },
         },
         orderBy: { createdAt: "desc" },
       }),

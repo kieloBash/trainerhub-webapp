@@ -29,16 +29,7 @@ export async function GET(request: Request) {
     const startDate = startDateParam ? new Date(startDateParam) : undefined;
     const endDate = endDateParam ? new Date(endDateParam) : undefined;
 
-    const whereClause: any = {
-      ...(sportFilter !== "ALL" && { sportId: sportFilter as any }),
-      ...(startDate &&
-        endDate && {
-          createdAt: {
-            gte: startOfDay(startDate),
-            lte: endOfDay(endDate),
-          },
-        }),
-    };
+    const whereClause: any = {};
 
     const response: ApiResponse = {
       payload: [],
@@ -46,35 +37,6 @@ export async function GET(request: Request) {
       totalPages: 0,
       currentPage: 1,
     };
-
-    const [data, totalData] = await Promise.all([
-      await db.user.findMany({
-        skip: (page - 1) * limit,
-        take: limit,
-        where: whereClause,
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-          createdAt: true,
-          sport: true,
-        },
-        orderBy: { createdAt: "desc" },
-      }),
-      await db.user.count({ where: whereClause }),
-    ]);
-
-    const formatData = data.map((d) => {
-      return {
-        ...d,
-      };
-    });
-
-    response.payload = (formatData as any[]) ?? [];
-    response.totalData = totalData;
-    response.totalPages = Math.ceil(totalData / limit);
-    response.currentPage = page;
 
     return NextResponse.json(response, {
       status: ROUTE_STATUS,

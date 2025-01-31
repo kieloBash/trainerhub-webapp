@@ -1,9 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { getUserByEmail } from "@/lib/user";
-import { AdminCreateUserSchema } from "@/schemas/user.schema";
 
 const ROUTE_NAME = "Delete User";
 const ROUTE_STATUS = 201;

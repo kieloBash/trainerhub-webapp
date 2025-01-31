@@ -9,8 +9,9 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import { Button } from '@/components/ui/button';
-import { Calendar1Icon, HeartIcon, MessageCircleQuestionIcon, StarIcon } from 'lucide-react';
+import { Calendar1Icon, CalendarClockIcon, HeartIcon, MessageCircleQuestionIcon, StarIcon } from 'lucide-react';
 import UiDataLoader from '@/components/ui/data-loader';
+import Link from 'next/link';
 
 const TrainersSection = () => {
     const data = useUserTrainers({});
@@ -32,24 +33,31 @@ const TrainersSection = () => {
                                             <AvatarFallback className="rounded-lg">{d?.name?.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div className="flex-1 flex flex-col gap-2">
-                                            <div className="flex-1 flex flex-col gap-0">
-                                                <h1 className="text-primary font-medium">{d.name}</h1>
-                                                <h1 className="text-sm">{d.sport?.name}</h1>
+                                            <div className="flex justify-between items-center w-full">
+                                                <div className="flex flex-col gap-0">
+                                                    <h1 className="text-primary font-medium">{d.name}</h1>
+                                                    <h1 className="text-sm">{d.trainer.sport?.name}</h1>
+                                                </div>
+                                                <Button type='button' size={"icon"} variant={"outline"}><HeartIcon /></Button>
                                             </div>
                                             <div className="w-full flex justify-between items-center">
                                                 <div className="flex justify-start items-center gap-2">
-                                                    <div className="h-9 px-2 py-1 flex justify-center items-center text-primary gap-2 border rounded-lg">
-                                                        <StarIcon className={"size-4"} />
+                                                    <div className="text-sm flex text-primary justify-center items-center gap-1">
+                                                        <StarIcon className={"size-3.5"} />
                                                         <span>4.6</span>
                                                     </div>
-                                                    <div className="h-9 px-2 py-1 flex justify-center items-center text-primary gap-2 border rounded-lg">
-                                                        <Calendar1Icon className={"size-4"} />
+                                                    <div className="text-sm flex text-primary justify-center items-center gap-1">
+                                                        <Calendar1Icon className={"size-3.5"} />
                                                         <span>60</span>
                                                     </div>
                                                 </div>
                                                 <div className="flex justify-end items-center gap-2">
-                                                    <Button type='button' size={"icon"} variant={"outline"}><MessageCircleQuestionIcon /></Button>
-                                                    <Button type='button' size={"icon"} variant={"outline"}><HeartIcon /></Button>
+                                                    <Link href={`/trainers/user/${d.id}`}>
+                                                        <Button type='button' size={"sm"} variant={"default"}>
+                                                            <CalendarClockIcon />
+                                                            <span>Book now!</span>
+                                                        </Button>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>

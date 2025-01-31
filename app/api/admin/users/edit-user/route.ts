@@ -30,33 +30,75 @@ export async function POST(request: Request) {
       dob,
       fName,
       lName,
-      role,
       sport,
       location,
       gender,
       contactNumber,
+      image,
+
+      bio,
+      highlights,
+      careerPath,
+      focus,
+      commission,
     } = validatedFields.data;
+
+    const CURRENT = await db.user.findFirst({
+      where: { email },
+      select: { id: true, role: true },
+    });
 
     await db.user.update({
       where: { email },
       data: {
-        role,
-        email,
         name: `${fName} ${lName}`,
-        location,
-        gender,
-        contactNumber,
-        dateOfBirth: dob ? new Date(dob) : null,
-        // password: hashedPassword,
-        lName,
-        fName,
-        sportId: sport,
-        //add sport
+        email,
+        emailVerified: new Date(),
+        image,
 
         isOnboarded: true,
-        emailVerified: new Date(),
       },
     });
+
+    if (CURRENT?.role === "TRAINER") {
+      await db.trainerProfile.update({
+        where: {
+          userId: CURRENT?.id,
+        },
+        data: {
+          fName,
+          lName,
+          contactNumber,
+          gender,
+          location,
+          dob: new Date(dob),
+
+          bio,
+          careerPath: careerPath ?? "",
+          highlights: highlights ?? "",
+          focus: focus ?? "",
+          commission: commission ?? 0,
+          sportId: sport,
+        },
+      });
+    } else if (CURRENT?.role === "USER") {
+      await db.userProfile.update({
+        where: {
+          userId: CURRENT?.id,
+        },
+        data: {
+          fName,
+          lName,
+          contactNumber,
+          gender,
+          location,
+          dob: new Date(dob),
+
+          bio,
+          sportId: sport,
+        },
+      });
+    }
 
     return new NextResponse(SUCCESS_MESSAGE, { status: ROUTE_STATUS });
   } catch (error: any) {

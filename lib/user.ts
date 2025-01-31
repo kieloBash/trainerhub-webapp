@@ -25,6 +25,20 @@ export const getUserById = async (id: string) => {
   }
 };
 
+export const getTrainerById = async (id: string) => {
+  try {
+    return await db.user.findUnique({
+      where: { id, role: "TRAINER" },
+      select: { id: true, name: true, trainer: { include: { sport: true } } },
+    });
+  } catch (error) {
+    console.log(error);
+    return null;
+  } finally {
+    db.$disconnect();
+  }
+};
+
 export const getUserByIdAuth = async ({
   id,
   currentId,
@@ -50,14 +64,9 @@ export const getUserByIdAuth = async ({
         name: true,
         email: true,
         role: true,
-        sportId: true,
-        sport: true,
-        location: true,
-        dateOfBirth: true,
-        contactNumber: true,
-        gender: true,
-        fName: true,
-        lName: true,
+        createdAt: true,
+        trainee: { include: { sport: true } },
+        trainer: { include: { sport: true } },
       },
     });
   } catch (error) {

@@ -2,6 +2,7 @@
 
 import { FETCH_INTERVAL, FORMAT } from "@/lib/utils";
 import { ADMIN_ROUTES } from "@/routes/admin.routes";
+import { UserType } from "@/types/lib.type";
 import { User } from "@prisma/client";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { formatDate, subDays } from "date-fns";
@@ -16,7 +17,7 @@ const default_startDate = subDays(new Date(), 7);
 const default_endDate = new Date();
 
 export type ApiResponse = {
-    payload: User[],
+    payload: UserType[],
     totalData: number,
     totalPages: number,
     currentPage: number,

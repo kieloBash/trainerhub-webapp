@@ -48,7 +48,7 @@ export async function GET(request: Request) {
           email: true,
           role: true,
           createdAt: true,
-          sport: true,
+          trainer: { include: { sport: true } },
           image: true,
         },
         orderBy: { name: "asc" },
