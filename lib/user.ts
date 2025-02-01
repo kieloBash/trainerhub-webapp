@@ -43,19 +43,18 @@ export const getUserByIdAuth = async ({
   id,
   currentId,
 }: {
-  id: string;
+  id?: string;
   currentId?: string;
 }) => {
   try {
-    if (!currentId) return null;
+    if (!currentId || !id) return null;
 
     const currentUser = await db.user.findFirst({
       where: { id: currentId },
       select: { role: true },
     });
 
-    if (!currentUser || !currentUser.role || currentUser.role !== "ADMIN")
-      return null;
+    if (!currentUser) return null;
 
     return await db.user.findUnique({
       where: { id },
@@ -65,6 +64,7 @@ export const getUserByIdAuth = async ({
         email: true,
         role: true,
         createdAt: true,
+        isOnboarded: true,
         trainee: { include: { sport: true } },
         trainer: { include: { sport: true } },
       },

@@ -148,3 +148,19 @@ export const RegisterUserSchema = z
     path: ["confirmPassword"],
     message: "Passwords do not match.",
   });
+
+export const TrainerOnboardingSchema = z.object({
+  workDays: z.array(
+    z.enum([
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ])
+  ),
+  startTime: z.string(),
+  endTime: z.string(),
+});

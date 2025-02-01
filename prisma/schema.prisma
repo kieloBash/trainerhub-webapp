@@ -108,7 +108,7 @@ enum AppointmentStatus {
 }
 
 model UserProfile {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
   fName         String
   lName         String
   contactNumber String
@@ -116,9 +116,9 @@ model UserProfile {
   location      String
   bio           String
   dob           DateTime
-  rating    Int?              @default(0)
-  feedbacks Feedback[]
-  favorites FavoriteTrainer[]
+  rating        Int?              @default(0)
+  feedbacks     Feedback[]
+  favorites     FavoriteTrainer[]
 
   userId  String  @unique @db.ObjectId
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -129,6 +129,16 @@ model UserProfile {
   updatedAt DateTime @updatedAt
 
   @@map("user-profile")
+}
+
+enum DayOfWeek {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
 }
 
 model TrainerProfile {
@@ -151,7 +161,9 @@ model TrainerProfile {
 
   credentials   TrainerCredential?
   trainingPlans TrainingPlan[]
-  schedules     DateTime[]
+  workDays      DayOfWeek[]
+  startTime     String?
+  endTime       String?
 
   userId  String  @unique @db.ObjectId
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)

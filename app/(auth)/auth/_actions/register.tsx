@@ -45,7 +45,7 @@ export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserS
                 image,
                 role,
 
-                isOnboarded: false,
+                isOnboarded: role === "TRAINER" ? false : true,
             },
         });
 
@@ -60,6 +60,25 @@ export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserS
                     dob: new Date(dob),
 
                     bio: `Welcome to our platform! Please update your bio.`,
+                    sportId: sport,
+                    userId: newUser.id,
+                },
+            });
+        } else if (role === "TRAINER") {
+            const newTrainer = await db.trainerProfile.create({
+                data: {
+                    fName,
+                    lName,
+                    contactNumber,
+                    gender,
+                    location,
+                    dob: new Date(dob),
+
+                    bio: `Welcome to our platform! Please update your bio.`,
+                    careerPath: "Please add a career path",
+                    highlights: "Please add a highlight",
+                    focus: "Please add what you are focused on",
+                    commission: 0,
                     sportId: sport,
                     userId: newUser.id,
                 },
