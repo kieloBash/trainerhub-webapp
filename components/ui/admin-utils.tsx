@@ -43,7 +43,7 @@ export default function UiAdminUtils() {
 
     return (
         <>
-            <div className="fixed lg:bottom-10 bottom-36 mb-2 right-2">
+            <div className="fixed lg:bottom-10 bottom-44 mb-6 right-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" size="icon">
