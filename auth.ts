@@ -82,7 +82,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.email = existingUser.email;
       token.picture = existingUser.image;
       token.isOnboarded = existingUser.isOnboarded;
-
       return token;
     },
   },

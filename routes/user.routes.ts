@@ -7,4 +7,10 @@ export const USER_ROUTES = {
       KEY: "USER:TRAINERS:ALL",
     },
   },
+  PROFILE: {
+    USER_CHANGE: {
+      URL: MAIN_API + "/profile/user",
+      KEY: "",
+    },
+  },
 };

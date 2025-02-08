@@ -48,9 +48,9 @@ const UserForm = ({ data }: { data: UserType }) => {
             careerPath: data.role === "TRAINER" && data.trainer ? data.trainer.careerPath : undefined,
             highlights: data.role === "TRAINER" && data.trainer ? data.trainer.highlights : undefined,
             focus: data.role === "TRAINER" && data.trainer ? data.trainer.focus : undefined,
-            commission: data.role === "TRAINER" && data.trainer ? data.trainer.commission : undefined,
+            commission: undefined,
             dob: data.role === "TRAINER" && data.trainer ? data.trainer.dob.toISOString().split('T')[0] : data.trainee.dob.toISOString().split('T')[0],
-            sport: data.role === "TRAINER" && data.trainer ? data.trainer.sport.id : data.trainee.sport.id,
+            sport: ""
         },
     });
 

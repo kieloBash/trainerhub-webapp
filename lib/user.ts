@@ -25,11 +25,41 @@ export const getUserById = async (id: string) => {
   }
 };
 
+export const updateProfileUser = async (newImage: string, id: string) => {
+  try {
+    return await db.user.update({ where: { id }, data: { image: newImage } });
+  } catch (error) {
+    console.log(error);
+    return null;
+  } finally {
+    db.$disconnect();
+  }
+};
+
 export const getTrainerById = async (id: string) => {
   try {
     return await db.user.findUnique({
       where: { id, role: "TRAINER" },
-      select: { id: true, name: true, trainer: { include: { sport: true } } },
+      select: { id: true, name: true, trainer: true },
+    });
+  } catch (error) {
+    console.log(error);
+    return null;
+  } finally {
+    db.$disconnect();
+  }
+};
+
+export const getTraineeById = async (id: string) => {
+  try {
+    return await db.user.findUnique({
+      where: { id, role: "USER" },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        trainee: { include: { sports: true } },
+      },
     });
   } catch (error) {
     console.log(error);
@@ -65,8 +95,8 @@ export const getUserByIdAuth = async ({
         role: true,
         createdAt: true,
         isOnboarded: true,
-        trainee: { include: { sport: true } },
-        trainer: { include: { sport: true } },
+        trainee: true,
+        trainer: true,
       },
     });
   } catch (error) {
