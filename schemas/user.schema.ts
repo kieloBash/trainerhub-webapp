@@ -139,9 +139,7 @@ export const RegisterUserSchema = z
     location: z.string().min(1, {
       message: "Location is required",
     }),
-    sport: z.string().min(1, {
-      message: "Sport is required",
-    }),
+    sports: z.array(z.string()),
     gender: z.enum(Object.keys(Gender) as [keyof typeof Gender]),
   })
   .refine((data) => data.password === data.confirmPassword, {

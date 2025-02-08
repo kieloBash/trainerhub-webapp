@@ -2,7 +2,7 @@
 import { ILayoutProps } from '@/types/global'
 import React, { useMemo } from 'react'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger, useSidebar } from '../ui/sidebar'
-import { BellIcon, HistoryIcon, MapPinCheckIcon, ScanQrCodeIcon, SettingsIcon, QrCodeIcon, LogOutIcon, HomeIcon, MessageCircle, DumbbellIcon, Calendar1Icon } from 'lucide-react'
+import { BellIcon, HistoryIcon, MapPinCheckIcon, ScanQrCodeIcon, SettingsIcon, QrCodeIcon, LogOutIcon, HomeIcon, MessageCircle, DumbbellIcon, Calendar1Icon, User2Icon } from 'lucide-react'
 import { APP_NAME, cn } from '@/lib/utils'
 import { useCurrentUser } from '@/lib/hooks'
 import { NavUser } from '../ui/nav-user'
@@ -35,17 +35,17 @@ const UserLayout = ({ children }: ILayoutProps) => {
                 items: [],
             },
             {
-                title: "Trainers",
-                url: "/trainers/user",
-                icon: DumbbellIcon,
-                isActive: pathname.includes("/trainers"),
-                items: [],
-            },
-            {
                 title: "Appointments",
                 url: "/appointments/user",
                 icon: Calendar1Icon,
                 isActive: pathname.includes("/appointments"),
+                items: [],
+            },
+            {
+                title: "Profile",
+                url: "/profile",
+                icon: User2Icon,
+                isActive: pathname.includes("/profile"),
                 items: [],
             },
         ]

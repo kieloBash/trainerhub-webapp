@@ -20,6 +20,7 @@ import { DumbbellIcon, User2Icon } from 'lucide-react';
 import { RegisterUserSchema } from '@/schemas/user.schema';
 import FormSelect from '@/components/forms/form-select';
 import { useSportsOptions } from '@/hooks/trainhub/use-sports';
+import SportsSelect from './sports-select';
 
 const domain = process.env.NEXT_PUBLIC_APP_URL;
 const template_id = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? "";
@@ -29,12 +30,11 @@ const public_key = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "";
 const Schema = RegisterUserSchema;
 
 const RegisterForm = () => {
-    const sports = useSportsOptions();
 
     const [isLoading, setIsLoading] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
-    
+
     const form = useForm<z.infer<typeof Schema>>({
         resolver: zodResolver(Schema),
         defaultValues: {
@@ -47,9 +47,10 @@ const RegisterForm = () => {
             password: "",
             confirmPassword: "",
             role: UserRole.USER,
-            sport: ""
+            sports: []
         },
     });
+
 
     const onSubmit = async (values: z.infer<typeof Schema>) => {
         console.log(values)
@@ -97,7 +98,6 @@ const RegisterForm = () => {
     async function onChangeRole(role: any) {
         form.setValue("role", role);
     }
-
 
     return (
         <Form {...form}>
@@ -176,14 +176,12 @@ const RegisterForm = () => {
                             disabled={isLoading}
                         />
                     </div>
-                    <FormSelect
-                        control={form.control}
-                        name="sport"
-                        label="Sport"
-                        array={sports}
-                        disabled={isLoading}
-                        value={form.watch("sport")}
-                    />
+
+
+                    <SportsSelect form={form} name={"sports"} />
+
+
+
                     <FormInput
                         control={form.control}
                         name="password"

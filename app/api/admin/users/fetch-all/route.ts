@@ -72,13 +72,20 @@ export async function GET(request: Request) {
           email: true,
           role: true,
           createdAt: true,
-          trainee: { include: { sport: true } },
-          trainer: { include: { sport: true } },
+          trainee: {
+            include: {
+              sports: { select: { sport: { select: { name: true } } } },
+            },
+          },
+          // trainee: { include: { sport: true } },
+          // trainer: { include: { sport: true } },
         },
         orderBy: { createdAt: "desc" },
       }),
       await db.user.count({ where: whereClause }),
     ]);
+
+    console.log(data);
 
     const formatData = data.map((d) => {
       return {

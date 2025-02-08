@@ -24,7 +24,7 @@ export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserS
             role,
 
             dob,
-            sport,
+            sports,
             location,
             gender,
             contactNumber,
@@ -50,7 +50,7 @@ export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserS
         });
 
         if (role === "USER") {
-            const newTrainee = await db.userProfile.create({
+            const newTraineeProfile = await db.userProfile.create({
                 data: {
                     fName,
                     lName,
@@ -60,12 +60,19 @@ export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserS
                     dob: new Date(dob),
 
                     bio: `Welcome to our platform! Please update your bio.`,
-                    sportId: sport,
                     userId: newUser.id,
                 },
             });
+            await db.userToSport.createMany({
+                data: sports.map((sportId) => {
+                    return {
+                        sportId,
+                        userProfileId: newTraineeProfile.id,
+                    }
+                })
+            })
         } else if (role === "TRAINER") {
-            const newTrainer = await db.trainerProfile.create({
+            const newTrainerProfile = await db.trainerProfile.create({
                 data: {
                     fName,
                     lName,
@@ -78,11 +85,17 @@ export const handleRegisterAccount = async (values: z.infer<typeof RegisterUserS
                     careerPath: "Please add a career path",
                     highlights: "Please add a highlight",
                     focus: "Please add what you are focused on",
-                    commission: 0,
-                    sportId: sport,
                     userId: newUser.id,
                 },
             });
+            await db.trainerToSport.createMany({
+                data: sports.map((sportId) => {
+                    return {
+                        sportId,
+                        trainerProfileId: newTrainerProfile.id,
+                    }
+                })
+            })
         }
 
         const verificationToken = await generateVerificationToken(email);

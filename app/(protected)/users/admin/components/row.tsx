@@ -17,7 +17,6 @@ import Link from 'next/link'
 type IProps = { data: UserType }
 
 const Row = ({ data }: IProps) => {
-    console.log(data);
     const queryClient = useQueryClient();
     async function handleDelete() {
         await handleAxios({ values: { id: data.id }, url: ADMIN_ROUTES.USERS.DELETE_USER.URL })
@@ -32,7 +31,7 @@ const Row = ({ data }: IProps) => {
             <TableCell className="font-medium">{data.name}</TableCell>
             <TableCell>{data.email}</TableCell>
             <TableCell>{formatDate(data.createdAt, FORMAT)}</TableCell>
-            <TableCell>{data.role === "TRAINER" ? data.trainer.sport.name : data.trainee.sport.name}</TableCell>
+            <TableCell>{data.role === "TRAINER" ? "" : data.trainee.sports.map((d: any) => d.sport.name).join(", ")}</TableCell>
             <TableCell className="flex flex-row justify-end items-center gap-2">
                 <Link href={`/users/admin/edit/${data.id}`}>
                     <Button type='button' size={"sm"}>View Details</Button>

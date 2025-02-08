@@ -6,10 +6,10 @@ export type UserType = User & {
 };
 
 export type TraineeProfileType = UserProfile & {
-  sport: SportType;
+  sports: SportType[];
 };
 export type TrainerProfileType = TrainerProfile & {
-  sport: SportType;
+  sports: SportType[];
 };
 export type SportType = Sport & {};
 export type SessionType = Sport & {};
