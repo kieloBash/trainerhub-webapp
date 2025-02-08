@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       gender,
       contactNumber,
       image,
-      
+
       bio,
       highlights,
       careerPath,
@@ -79,8 +79,7 @@ export async function POST(request: Request) {
           careerPath: careerPath ?? "",
           highlights: highlights ?? "",
           focus: focus ?? "",
-          commission: commission ?? 0,
-          sportId: sport,
+          // sportId: sport,
           userId: newUser.id,
         },
       });
@@ -95,7 +94,7 @@ export async function POST(request: Request) {
           dob: new Date(dob),
 
           bio,
-          sportId: sport,
+          // sportId: sport,
           userId: newUser.id,
         },
       });

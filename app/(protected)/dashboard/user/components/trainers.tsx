@@ -36,7 +36,7 @@ const TrainersSection = () => {
                                             <div className="flex justify-between items-center w-full">
                                                 <div className="flex flex-col gap-0">
                                                     <h1 className="text-primary font-medium">{d.name}</h1>
-                                                    <h1 className="text-sm">{d.trainer.sport?.name}</h1>
+                                                    <h1 className="text-sm">{}</h1>
                                                 </div>
                                                 <Button type='button' size={"icon"} variant={"outline"}><HeartIcon /></Button>
                                             </div>

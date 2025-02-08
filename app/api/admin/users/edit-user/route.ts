@@ -77,8 +77,7 @@ export async function POST(request: Request) {
           careerPath: careerPath ?? "",
           highlights: highlights ?? "",
           focus: focus ?? "",
-          commission: commission ?? 0,
-          sportId: sport,
+          // sportId: sport,
         },
       });
     } else if (CURRENT?.role === "USER") {
@@ -95,7 +94,7 @@ export async function POST(request: Request) {
           dob: new Date(dob),
 
           bio,
-          sportId: sport,
+          // sportId: sport,
         },
       });
     }
