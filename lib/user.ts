@@ -38,10 +38,30 @@ export const updateProfileUser = async (newImage: string, id: string) => {
 
 export const getTrainerById = async (id: string) => {
   try {
-    return await db.user.findUnique({
+    const d = await db.user.findUnique({
       where: { id, role: "TRAINER" },
-      select: { id: true, name: true, trainer: true },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        email: true,
+        trainer: {
+          include: {
+            sports: { select: { sport: { select: { name: true } } } },
+          },
+        },
+      },
     });
+
+    return d
+      ? {
+          ...d,
+          trainer: {
+            ...d.trainer,
+            sports: d.trainer?.sports.map((sport) => sport.sport.name),
+          },
+        }
+      : null;
   } catch (error) {
     console.log(error);
     return null;

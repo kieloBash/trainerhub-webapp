@@ -4,12 +4,9 @@ import { db } from "@/lib/db";
 import { getUserByEmail } from "@/lib/user";
 
 export const newVerification = async (token: string) => {
-  console.log(token)
   const existingToken = await db.verificationToken.findFirst({
     where: { token },
   });
-
-  console.log(existingToken);
 
   if (!existingToken) {
     return { error: "Token does not exist!" };
