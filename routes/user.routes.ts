@@ -13,4 +13,10 @@ export const USER_ROUTES = {
       KEY: "",
     },
   },
+  APPOINTMENTS: {
+    BOOKING: {
+      URL: MAIN_API + "/appointments/booking",
+      KEY: "",
+    },
+  },
 };
