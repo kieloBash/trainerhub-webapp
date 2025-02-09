@@ -14,7 +14,7 @@ const OnboardingPage = async () => {
     return (
         <article className="size-full flex flex-col justify-start items-center py-10 px-6 gap-8">
             <div className="">
-                <h1 className="text-center text-xl text-primary font-semibold">Onboarding</h1>
+                <h1 className="text-center text-2xl text-primary font-bold">Onboarding</h1>
                 <h3 className="text-center text-xs">Get started and fill up all the necessary informations.</h3>
             </div>
             <OnboardingForm data={data as any} />

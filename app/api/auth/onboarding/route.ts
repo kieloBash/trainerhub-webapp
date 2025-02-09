@@ -1,6 +1,5 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { OnboardingSchema } from "@/schemas/auth.schema";
 import { TrainerOnboardingSchema } from "@/schemas/user.schema";
 import { NextResponse } from "next/server";
 
@@ -25,6 +24,17 @@ export async function POST(request: Request) {
 
     const fields = validatedFields.data;
 
+    const trainerProfile = await db.trainerProfile.findFirst({
+      where: { userId: user.id },
+      select: { id: true },
+    });
+
+    if (!trainerProfile) {
+      return new NextResponse(ROUTE_NAME + ": No Profile Found!", {
+        status: 400,
+      });
+    }
+
     await db.user.update({
       where: { id: user.id },
       data: { isOnboarded: true },
@@ -38,8 +48,20 @@ export async function POST(request: Request) {
         workDays: fields.workDays,
         startTime: fields.startTime,
         endTime: fields.endTime,
+        yearsOfExperience: fields.yearsOfExperience,
+        level: fields.level,
       },
     });
+
+    if (fields.specializations.length > 0) {
+      await db.specializationTrainer.create({
+        data: {
+          sportId: fields.specializations[0].sportId,
+          trainerId: trainerProfile.id,
+          certification: fields.specializations[0].image,
+        },
+      });
+    }
 
     return new NextResponse(SUCCESS_MESSAGE, { status: ROUTE_STATUS });
   } catch (error: any) {

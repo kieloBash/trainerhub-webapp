@@ -20,6 +20,7 @@ import { UserType } from '@/types/lib.type';
 import { useSportsOptions } from '@/hooks/trainhub/use-sports';
 import AvailableDaysOptions from './components/days-form';
 import { AUTH_ROUTES } from '@/routes/auth.routes';
+import SpecializationOptions from './components/specialization-form';
 
 const URL = AUTH_ROUTES.ONBOARDING.URL;
 const QUERY_KEY = ADMIN_ROUTES.USERS.FETCH_ALL.KEY;
@@ -36,10 +37,14 @@ const OnboardingForm = ({ data }: { data: UserType }) => {
         resolver: zodResolver(Schema),
         defaultValues: {
             workDays: [],
+            yearsOfExperience: 0,
+            specializations: [],
+            level: "AMATEUR",
         }
     });
 
     async function onSubmit(values: z.infer<typeof Schema>) {
+        // console.log(values);
         setIsLoading(true);
         await handleAxios({ values, url: URL })
             .then(async () => {
@@ -52,8 +57,6 @@ const OnboardingForm = ({ data }: { data: UserType }) => {
                 setIsLoading(false);
             });
     }
-
-
 
     return (
         <article className="p-4">
@@ -84,6 +87,27 @@ const OnboardingForm = ({ data }: { data: UserType }) => {
                             />
                         </div>
                     </div>
+                    <div className="w-full">
+                        <FormInput
+                            control={form.control}
+                            name="yearsOfExperience"
+                            label="Years of Experience"
+                            type='number'
+                            disabled={isLoading}
+                        />
+                    </div>
+                    <div className="w-full">
+                        <FormSelect
+                            control={form.control}
+                            name="level"
+                            value={form.watch("level")}
+                            label="Trainer Level"
+                            array={["AMATEUR", "INTERMEDIATE", "PROFESSIONAL"].map((d) => ({ id: d, label: d }))}
+                            disabled={isLoading}
+                            description='500php (Amateur) | 1000php (Intermediate) | 1500php (Professional)'
+                        />
+                    </div>
+                    <SpecializationOptions form={form} name='specializations' />
                     <div className="w-full">
                         <FormSubmit className='w-full' disabled={isLoading}>
                             <span>Submit</span>

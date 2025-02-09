@@ -94,8 +94,9 @@ model Sport {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
 
-  traineeProfile UserToSport[]
-  trainerProfile TrainerToSport[]
+  traineeProfile        UserToSport[]
+  trainerProfile        TrainerToSport[]
+  specializationTrainer SpecializationTrainer[]
 
   @@map("sports")
 }
@@ -110,7 +111,7 @@ enum AppointmentStatus {
 //FOR CONNECTING many-many
 model UserToSport {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
-  userProfileId String @unique @db.ObjectId
+  userProfileId String @db.ObjectId
   sportId       String @db.ObjectId
 
   user  UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
@@ -160,7 +161,7 @@ enum TrainerLevel {
 //FOR CONNECTING many-many
 model TrainerToSport {
   id               String @id @default(auto()) @map("_id") @db.ObjectId
-  trainerProfileId String @unique @db.ObjectId
+  trainerProfileId String @db.ObjectId
   sportId          String @db.ObjectId
 
   trainer TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
@@ -181,24 +182,41 @@ model TrainerProfile {
   highlights    String
   focus         String
   rating        Int?              @default(0)
+  level         TrainerLevel?     @default(AMATEUR)
   ratingsByUser TrainingRating[]
   favoritedBy   FavoriteTrainer[]
 
-  credentials String[] //images
+  credentials       String[] //images
+  yearsOfExperience Int      @default(0)
 
   trainingFeedbacks TrainingFeedback[]
   workDays          DayOfWeek[]
   startTime         String?
   endTime           String?
 
-  userId String           @unique @db.ObjectId
-  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sports TrainerToSport[]
+  userId         String                 @unique @db.ObjectId
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sports         TrainerToSport[]
+  specialization SpecializationTrainer?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("trainer-profile")
+}
+
+model SpecializationTrainer {
+  id        String         @id @default(auto()) @map("_id") @db.ObjectId
+  trainerId String         @unique @db.ObjectId
+  trainer   TrainerProfile @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+
+  sportId       String @db.ObjectId
+  sport         Sport  @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  certification String
+
+  createdAt DateTime @default(now())
+
+  @@map("specialization-trainer")
 }
 
 model FavoriteTrainer {

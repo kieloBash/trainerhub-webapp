@@ -147,6 +147,12 @@ export const RegisterUserSchema = z
     message: "Passwords do not match.",
   });
 
+export const SpecializationTrainerSchema = z.object({
+  image: z.string().min(1),
+  sportName: z.string().optional(),
+  sportId: z.string().min(1),
+});
+
 export const TrainerOnboardingSchema = z.object({
   workDays: z.array(
     z.enum([
@@ -161,6 +167,9 @@ export const TrainerOnboardingSchema = z.object({
   ),
   startTime: z.string(),
   endTime: z.string(),
+  yearsOfExperience: z.number().min(0),
+  level: z.enum(["AMATEUR", "INTERMEDIATE", "PROFESSIONAL"]),
+  specializations: z.array(SpecializationTrainerSchema),
 });
 
 export const UserProfileSchema = z.object({

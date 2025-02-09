@@ -31,7 +31,9 @@ const Row = ({ data }: IProps) => {
             <TableCell className="font-medium">{data.name}</TableCell>
             <TableCell>{data.email}</TableCell>
             <TableCell>{formatDate(data.createdAt, FORMAT)}</TableCell>
-            <TableCell>{data.role === "TRAINER" ? "" : data.trainee.sports.map((d: any) => d.sport.name).join(", ")}</TableCell>
+            <TableCell>
+                {/* {data.role === "TRAINER" ? "" : data.trainee.sports.map((d: any) => d.sport.name).join(", ")} */}
+            </TableCell>
             <TableCell className="flex flex-row justify-end items-center gap-2">
                 <Link href={`/users/admin/edit/${data.id}`}>
                     <Button type='button' size={"sm"}>View Details</Button>
